@@ -1,0 +1,64 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Directions from "../components/Directions.astro";
+import Kids from "../components/Kids.astro";
+import Doctors from "../components/Doctors.astro";
+import Cases from "../components/Cases.astro";
+import Prices from "../components/Prices.astro";
+import Contacts from "../components/Contacts.astro";
+import Footer from "../components/Footer.astro";
+import StickyCall from "../components/StickyCall.astro";
+import { CLINICS, EMAIL, INSTAGRAM, FACEBOOK, SERVICES_LD } from "../data/clinic";
+
+const H1 = "Сімейна стоматологія у Львові: від першого візиту дитини до імплантації";
+const title = "Сімейна стоматологія у Львові — клініка ЕКСПЕРТ, 2 адреси";
+const description = "Сімейна стоматологія ЕКСПЕРТ у Львові: Володимира Великого, 10Б та Окружна, 94а. Діти із седацією, імплантація, вініри. Запис: 068 491 19 11";
+
+// Schema.org (R-204, R-206): two Dentist nodes under one Organization. No rating, geo or priceRange until confirmed.
+const hours = [
+  { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "09:00", closes: "21:00" },
+  { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "16:00" },
+];
+const ld = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "#organization",
+      name: "Стоматологічна клініка ЕКСПЕРТ",
+      telephone: "+380684911911",
+      email: EMAIL,
+      sameAs: [INSTAGRAM, FACEBOOK],
+      subOrganization: CLINICS.map((c) => ({ "@id": `#clinic-${c.id}` })),
+    },
+    ...CLINICS.map((c) => ({
+      "@type": "Dentist",
+      "@id": `#clinic-${c.id}`,
+      name: `Стоматологічна клініка ЕКСПЕРТ — ${c.full}`,
+      parentOrganization: { "@id": "#organization" },
+      address: { "@type": "PostalAddress", streetAddress: c.full, addressLocality: "Львів", addressCountry: "UA" },
+      telephone: "+380684911911",
+      email: EMAIL,
+      openingHoursSpecification: hours,
+      medicalSpecialty: "Dentistry",
+      availableService: SERVICES_LD.map((name) => ({ "@type": "MedicalProcedure", name })),
+      sameAs: [INSTAGRAM, FACEBOOK],
+    })),
+  ],
+};
+---
+<Base lang="uk" title={title} description={description}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(ld)} />
+  <Header slot="header" />
+  <Hero h1={H1} />
+  <Directions />
+  <Kids />
+  <Doctors />
+  <Cases />
+  <Prices />
+  <Contacts />
+  <Footer slot="footer" />
+  <StickyCall />
+</Base>

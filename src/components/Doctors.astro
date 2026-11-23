@@ -1,0 +1,87 @@
+---
+import { Picture } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { DOCTORS } from "../data/clinic";
+import potashnyk from "../assets/img/doctor-potashnyk.jpg";
+import zhuk from "../assets/img/doctor-zhuk.jpg";
+import lapida from "../assets/img/doctor-lapida.jpg";
+import yehorova from "../assets/img/doctor-yehorova.jpg";
+import kolesnichenko from "../assets/img/doctor-kolesnichenko.jpg";
+import pavlishak from "../assets/img/doctor-pavlishak.jpg";
+
+const photo: Record<string, ImageMetadata> = { potashnyk, zhuk, lapida, yehorova, kolesnichenko, pavlishak };
+const note = "Розділ у розробці";
+---
+<section id="doctors" class="section doctors" aria-labelledby="doctors-title" data-rec="R-106,R-205,R-303">
+  <div class="container">
+    <header class="section-head doctors__head">
+      <h2 id="doctors-title">Шість лікарів із досвідом від 10 до 18 років</h2>
+      <p>Хто вас прийме у двох клініках ЕКСПЕРТ.</p>
+      <FutureLink note={note}>Профілі лікарів</FutureLink>
+      <div class="doctors__arrows" aria-label="Гортати лікарів">
+        <button type="button" class="arrow" data-strip-prev><Icon name="arrow-left" /><span class="visually-hidden">Попередній лікар</span></button>
+        <button type="button" class="arrow" data-strip-next><Icon name="arrow-right" /><span class="visually-hidden">Наступний лікар</span></button>
+      </div>
+    </header>
+
+    <ul class="doctors__list" data-strip>
+      {DOCTORS.map((d, i) => (
+        <li class="doc" data-reveal style={`--reveal-delay: ${i * 60}ms`}>
+          <Picture src={photo[d.id]} alt={`${d.name}, лікар клініки ЕКСПЕРТ, у салатовій формі`} formats={["avif", "webp"]} widths={[280, 373]} sizes="(min-width: 1024px) 25vw, 78vw" loading="lazy" decoding="async" class="doc__img" />
+          <p class="doc__years"><span class="num">{d.years}</span> років досвіду</p>
+          <h3 class="doc__name">{d.name}</h3>
+          {d.role && <p class="doc__role">{d.role}</p>}
+          <p class="doc__focus">{d.focus}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .doctors__head { grid-template-columns: minmax(0, 1fr); justify-items: start; }
+  .doctors__arrows { display: none; gap: var(--s-1); }
+  :global(.js) .doctors__arrows { display: flex; }
+  .arrow {
+    display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); padding: 0;
+    border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-bg); cursor: pointer;
+    transition: background-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  .arrow:hover { background: var(--color-surface); }
+  .arrow:active { transform: scale(.96); }
+  .arrow :global(svg) { width: 20px; height: 20px; }
+
+  .doctors__list {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 68%; gap: var(--s-2);
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    padding-bottom: var(--s-2); scrollbar-width: thin;
+  }
+  .doc { display: grid; align-content: start; gap: .35rem; scroll-snap-align: start; min-width: 0; }
+  .doc :global(.doc__img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 15%; border-radius: var(--radius-img); background: var(--color-surface); margin-bottom: var(--s-1); }
+  .doc__years { display: flex; align-items: baseline; gap: .5rem; color: var(--color-text-muted); font-size: var(--fs-cap); }
+  .doc__years .num { font-size: var(--fs-h2); line-height: 1; color: var(--color-text); }
+  .doc__role { font-weight: 500; }
+  .doc__focus { color: var(--color-text-muted); font-size: var(--fs-cap); }
+
+  @media (min-width: 768px) {
+    .doctors__list { grid-auto-columns: 42%; }
+  }
+  @media (min-width: 1024px) {
+    :global(.js) .doctors__arrows { display: none; }
+    .doctors__list {
+      grid-auto-flow: row; grid-template-columns: repeat(24, minmax(0, 1fr)); grid-auto-columns: auto;
+      column-gap: var(--gap); row-gap: var(--s-5); overflow: visible; padding-bottom: 0;
+    }
+    .doc { grid-column: span 7; }
+    .doc:nth-child(1) { grid-column: 1 / span 7; }
+    .doc:nth-child(2) { grid-column: 9 / span 7; }
+    .doc:nth-child(3) { grid-column: 17 / span 7; }
+    .doc:nth-child(4) { grid-column: 2 / span 7; }
+    .doc:nth-child(5) { grid-column: 10 / span 7; }
+    .doc:nth-child(6) { grid-column: 18 / span 7; }
+  }
+  @media (max-width: 1023px) {
+    .doc[data-reveal] { --reveal-delay: 0ms !important; }
+  }
+</style>

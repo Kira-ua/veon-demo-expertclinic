@@ -1,0 +1,70 @@
+---
+import { Picture } from "astro:assets";
+import group from "../assets/img/kids-group.jpg";
+import sedation from "../assets/img/kids-sedation.jpg";
+import CallButton from "./CallButton.astro";
+---
+<section id="kids" class="kids on-accent" aria-labelledby="kids-title" data-rec="R-107">
+  <div class="container kids__grid">
+    <h2 id="kids-title" class="kids__title">ЕКСПЕРТ Діти: лікування із седацією під наглядом дитячого анестезіолога</h2>
+
+    <figure class="kids__main">
+      <Picture src={group} alt="Групове заняття-знайомство в дитячому кабінеті: діти разом із батьками та лікарями біля крісла з плюшевим ведмедем" formats={["avif", "webp"]} widths={[480, 720, 960]} sizes="(min-width: 1024px) 56vw, 100vw" loading="lazy" decoding="async" />
+    </figure>
+
+    <div class="kids__aside">
+    <ul class="kids__facts">
+      <li class="kids__fact">
+        <h3>Седація під наглядом дитячого анестезіолога</h3>
+        <p>Наркозно-дихальне обладнання Dräger.</p>
+      </li>
+      <li class="kids__fact">
+        <p class="kids__big num">60 хв</p>
+        <h3>Групове заняття-знайомство</h3>
+        <p>До 5 дітей у групі.</p>
+      </li>
+      <li class="kids__fact">
+        <p class="kids__big num">500</p>
+        <h3>Консультація дитячого стоматолога</h3>
+      </li>
+    </ul>
+    <div class="kids__text">
+      <p>Лікування молочних і постійних зубів, цифровий рентген. Дітей приймають Тетяна Лапіда та Світлана Єгорова.</p>
+      <CallButton variant="dark" label="Записати дитину" class="kids__call" />
+    </div>
+    </div>
+
+    <figure class="kids__second">
+        <Picture src={sedation} alt="Дитина в кріслі поруч із наркозно-дихальним апаратом Dräger, поряд медик у салатовій формі" formats={["avif", "webp"]} widths={[400, 640, 840]} sizes="(min-width: 1024px) 34vw, 100vw" loading="lazy" decoding="async" />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .kids { background: var(--color-accent); color: var(--color-accent-ink); padding-block: var(--s-5); }
+  .kids__grid { display: grid; gap: var(--s-4); }
+  .kids__title { max-width: 22ch; }
+  .kids figure { margin: 0; }
+  .kids figure :global(img) { width: 100%; height: auto; border-radius: var(--radius-img); object-fit: cover; }
+  .kids__main :global(img) { aspect-ratio: 3 / 2; }
+  .kids__second :global(img) { aspect-ratio: 4 / 3; }
+  .kids__facts { display: grid; gap: var(--s-3); }
+  .kids__fact { display: grid; gap: .35rem; padding-top: var(--s-2); border-top: 2px solid var(--color-accent-ink); }
+  .kids__fact p:not(.kids__big) { font-size: var(--fs-body); }
+  .kids__big { font-size: var(--fs-h2); line-height: 1; }
+  .kids__aside { display: grid; gap: var(--s-4); align-content: start; }
+  .kids__text { display: grid; gap: var(--s-3); justify-items: start; }
+  .kids__text p { max-width: 40ch; }
+
+  @media (min-width: 1024px) {
+    .kids { padding-block: var(--s-6); }
+    .kids__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: var(--s-5); align-items: start; }
+    .kids__title { grid-column: 1 / span 9; }
+    .kids__grid { row-gap: var(--s-4); }
+    .kids__main { grid-column: 1 / span 7; grid-row: 2; }
+    .kids__second { grid-column: 1 / span 7; grid-row: 3; }
+    .kids__second :global(img) { aspect-ratio: 3 / 1; object-position: 50% 60%; }
+    .kids__aside { grid-column: 9 / span 4; grid-row: 2 / span 2; }
+    .kids__facts { gap: var(--s-3); }
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import Icon from "./Icon.astro";
+import CallButton from "./CallButton.astro";
+import { CLINICS, HOURS, PHONE_TEL, PHONE_FULL, EMAIL, INSTAGRAM, FACEBOOK } from "../data/clinic";
+---
+<section id="contacts" class="section contacts" aria-labelledby="contacts-title" data-rec="R-109,R-206,R-204">
+  <div class="container">
+    <header class="section-head">
+      <h2 id="contacts-title">Дві клініки у Львові, один номер</h2>
+      <p>Однаковий графік в обох клініках. Запис — за телефоном.</p>
+    </header>
+
+    <div class="clinics">
+      {CLINICS.map((c) => (
+        <article class="clinic" aria-labelledby={`clinic-${c.id}`}>
+          <h3 id={`clinic-${c.id}`} class="clinic__street">
+            <span class="clinic__pre">вул.</span> {c.street}, {c.house}
+          </h3>
+          <p class="clinic__city">Львів</p>
+          <dl class="clinic__hours">
+            {HOURS.map((h) => (
+              <div><dt>{h.days}</dt><dd class="num">{h.time}</dd></div>
+            ))}
+          </dl>
+          <div class="clinic__actions">
+            <a class="link-line clinic__route" href={c.map} target="_blank" rel="noopener">
+              <Icon name="pin" />
+              <span>Прокласти маршрут<span class="visually-hidden">: {c.full}</span></span>
+            </a>
+            <a class="link-line" href={PHONE_TEL}>{PHONE_FULL}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="contacts__more">
+      <CallButton />
+      <ul class="contacts__links">
+        <li><a class="link-line contacts__link" href={`mailto:${EMAIL}`}><Icon name="mail" /><span>{EMAIL}</span></a></li>
+        <li><a class="link-line contacts__link" data-rec="S-R010" href={INSTAGRAM} target="_blank" rel="noopener"><Icon name="instagram" /><span>Instagram</span></a></li>
+        <li><a class="link-line contacts__link" data-rec="S-R010" href={FACEBOOK} target="_blank" rel="noopener"><Icon name="facebook" /><span>Facebook</span></a></li>
+      </ul>
+      <p class="contacts__rating cap muted">4,9 на DOC.UA, 105 відгуків (листопад 2026)</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .clinics { display: grid; gap: var(--s-4); }
+  .clinic { display: grid; gap: var(--s-2); align-content: start; padding-top: var(--s-3); border-top: 2px solid var(--color-text); }
+  .clinic__street { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h2); line-height: var(--lh-head); letter-spacing: -0.01em; }
+  .clinic__pre { font-family: var(--font-body); font-weight: 500; font-size: var(--fs-h3); color: var(--color-text-muted); }
+  .clinic__city { color: var(--color-text-muted); margin-top: -.5rem; }
+  .clinic__hours { display: grid; gap: .25rem; }
+  .clinic__hours div { display: flex; gap: var(--s-2); }
+  .clinic__hours dt { width: 4.5rem; color: var(--color-text-muted); }
+  .clinic__hours dd { font-family: var(--font-body); font-weight: 500; }
+  .clinic__actions { display: flex; flex-wrap: wrap; gap: 0 var(--s-3); }
+  .clinic__route { gap: .5rem; }
+  .clinic__route :global(svg), .contacts__link :global(svg) { width: 20px; height: 20px; flex: none; }
+
+  .contacts__more { display: grid; gap: var(--s-3); justify-items: start; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--color-border); }
+  .contacts__links { display: flex; flex-wrap: wrap; gap: 0 var(--s-3); }
+  .contacts__link { gap: .5rem; }
+  .contacts__link span { overflow-wrap: anywhere; }
+
+  @media (min-width: 768px) {
+    .clinics { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+    .contacts__more { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: var(--s-4); }
+    .contacts__rating { grid-column: 1 / -1; }
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+import { Picture } from "astro:assets";
+import microscope from "../assets/img/therapy-microscope.jpg";
+import surgery from "../assets/img/surgery.jpg";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { DIRECTIONS } from "../data/clinic";
+
+const photos: Record<string, { src: ImageMetadata; alt: string }> = {
+  therapy: { src: microscope, alt: "Лікарка налаштовує стоматологічний мікроскоп над кріслом пацієнтки" },
+  surgery: { src: surgery, alt: "Двоє хірургів ЕКСПЕРТ в операційній під час втручання" },
+};
+const note = "Розділ у розробці";
+---
+<section id="directions" class="section directions" aria-labelledby="directions-title" data-rec="R-104">
+  <div class="container">
+    <header class="section-head directions__head">
+      <h2 id="directions-title">Сім напрямків лікування і ціна, з якої починається кожен</h2>
+      <p>Від профілактики до складних реабілітацій. Ціни — за прайсом клініки.</p>
+      <FutureLink note={note}>Детальніше про послуги</FutureLink>
+    </header>
+
+    <ol class="dir-list">
+      {DIRECTIONS.map((d) => (
+        <li class:list={["dir", `dir--${d.id}`, photos[d.id] && "dir--photo"]}>
+          {photos[d.id] && (
+            <div class="dir__photo">
+              <Picture src={photos[d.id].src} alt={photos[d.id].alt} formats={["avif", "webp"]} widths={[480, 760, 960]} sizes="(min-width: 1024px) 620px, (min-width: 768px) 50vw, 100vw" loading="lazy" decoding="async" />
+            </div>
+          )}
+          <article class="dir__body" aria-labelledby={`dir-${d.id}`}>
+            <p class="dir__price">
+              {d.from && <span class="dir__from">від</span>}
+              <span class="num dir__num">{d.price}</span>
+            </p>
+            <p class="dir__price-label">{d.priceLabel}</p>
+            <h3 id={`dir-${d.id}`} class="dir__title">{d.title}</h3>
+            {d.kidsLink && <p class="dir__tag">Окремий дитячий прийом</p>}
+            <p class="dir__lead">{d.lead}</p>
+
+            {d.more.length > 0 && (
+              <div class="dir__more" id={`more-${d.id}`} data-open="false">
+                <dl>
+                  {d.more.map((r) => (
+                    <div class="dir__row">
+                      <dt>{r.label}</dt>
+                      {r.value && <dd class="num">{r.value}</dd>}
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+
+            {(d.more.length > 0 || d.kidsLink) && (
+              <div class="dir__actions">
+                {d.more.length > 0 && (
+                  <button class="dir__toggle" type="button" aria-expanded="false" aria-controls={`more-${d.id}`} data-more-toggle>
+                    <Icon name="plus" />
+                    <span>Що входить</span>
+                  </button>
+                )}
+                {d.kidsLink && <a class="link-line" href="#kids">Про ЕКСПЕРТ Діти</a>}
+              </div>
+            )}
+          </article>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .directions__head { justify-items: start; }
+  .dir-list { display: grid; gap: var(--s-4); }
+  .dir { display: grid; gap: var(--s-2); align-content: start; min-width: 0; }
+  .dir__photo :global(img) { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-img); }
+  .dir--surgery .dir__photo { display: none; }
+  .dir__body { display: grid; align-content: start; gap: .35rem; padding-top: var(--s-2); border-top: 1px solid var(--color-border); }
+  .dir__price { display: flex; align-items: baseline; gap: .5rem; line-height: 1; }
+  .dir__from { font-weight: 500; color: var(--color-text-muted); }
+  .dir__num { font-size: var(--fs-h2); line-height: 1; letter-spacing: -0.01em; }
+  .dir__price-label { font-size: var(--fs-cap); color: var(--color-text-muted); }
+  .dir__title { margin-top: var(--s-1); }
+  .dir__tag {
+    justify-self: start; padding: .2rem .6rem; border-radius: var(--radius);
+    background: var(--color-accent); color: var(--color-accent-ink); font-size: var(--fs-cap); font-weight: 600;
+  }
+  .dir__lead { color: var(--color-text-muted); max-width: 40ch; }
+
+  .dir__more { margin-top: var(--s-1); }
+  :global(.js) .dir__more[data-open="false"] { display: none; }
+  :global(.js) .dir__more[data-open="true"] { animation: more-in 240ms var(--ease-out); }
+  @keyframes more-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .dir__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-2); padding-block: .6rem; border-bottom: 1px solid var(--color-surface); font-size: var(--fs-cap); }
+  .dir__row dt { min-width: 0; }
+  .dir__row dd { flex: none; font-size: var(--fs-body); }
+
+  .dir__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-3); margin-top: var(--s-1); }
+  .dir__toggle {
+    display: none; align-items: center; gap: .5rem; min-height: var(--tap); padding: 0 1rem 0 .75rem;
+    border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-bg);
+    font-weight: 500; cursor: pointer; transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out);
+  }
+  :global(.js) .dir__toggle { display: inline-flex; }
+  .dir__toggle:hover { border-color: var(--color-text-muted); background: var(--color-surface); }
+  .dir__toggle :global(svg) { width: 18px; height: 18px; transition: transform 240ms var(--ease-out); }
+  .dir__toggle[aria-expanded="true"] :global(svg) { transform: rotate(45deg); }
+
+  /* Strict grid: 2 photo records, then rows of 3 and 2 */
+  @media (min-width: 768px) {
+    .dir-list { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--gap); row-gap: var(--s-5); }
+    .dir { grid-column: span 3; }
+    .dir--surgery .dir__photo { display: block; }
+  }
+  @media (min-width: 1024px) {
+    .directions { padding-top: calc(var(--s-6) + var(--s-3)); }
+    .dir-list { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .dir { grid-column: span 4; }
+    .dir--photo { grid-column: span 6; }
+  }
+</style>

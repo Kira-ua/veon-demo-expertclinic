@@ -1,0 +1,162 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/img/logo.png";
+import Icon from "./Icon.astro";
+import FutureLink from "./FutureLink.astro";
+import CallButton from "./CallButton.astro";
+import { PHONE_TEL, CLINICS, HOURS, INSTAGRAM, FACEBOOK } from "../data/clinic";
+
+interface Props { home?: string; }
+// On the 404 page anchors lead back to the homepage sections.
+const { home = "" } = Astro.props;
+const NAV = [
+  { href: `${home}#directions`, label: "Послуги" },
+  { href: `${home}#kids`, label: "Дітям" },
+  { href: `${home}#doctors`, label: "Лікарі" },
+  { href: `${home}#cases`, label: "Результати" },
+  { href: `${home}#prices`, label: "Ціни" },
+  { href: `${home}#contacts`, label: "Контакти" },
+];
+const note = "Розділ у розробці";
+---
+<header class="site-header" data-header data-rec="R-102,R-103">
+  <div class="container site-header__row">
+    <a class="logo" href={home ? home : "#top"}>
+      <Image src={logo} alt="Стоматологічна клініка ЕКСПЕРТ" widths={[140, 280]} sizes="140px" width={140} height={48} loading="eager" format="webp" />
+    </a>
+
+    <nav class="nav" aria-label="Основне меню">
+      <ul class="nav__list">
+        {NAV.map((n) => <li><a class="nav__link" href={n.href} data-nav>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="site-header__end">
+      <ul class="lang" aria-label="Мова сайту">
+        <li><span class="lang__current" aria-current="true">UA</span></li>
+        <li><FutureLink note={note} class="lang__item"><span lang="en">EN</span></FutureLink></li>
+        <li><FutureLink note={note} class="lang__item"><span lang="pl">PL</span></FutureLink></li>
+      </ul>
+      <CallButton class="site-header__call" label="068 491 19 11" showNumber={false} />
+      <a class="icon-call" href={PHONE_TEL} aria-label="Зателефонувати"><Icon name="phone" /></a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+        <Icon name="menu" />
+        <span class="visually-hidden">Відкрити меню</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" hidden data-menu>
+    <div class="mobile-menu__top container">
+      <span class="mobile-menu__title">Меню</span>
+      <button class="burger" type="button" data-menu-close>
+        <Icon name="close" />
+        <span class="visually-hidden">Закрити меню</span>
+      </button>
+    </div>
+    <div class="container mobile-menu__body">
+      <nav aria-label="Меню для телефона">
+        <ul class="mobile-menu__nav">
+          {NAV.map((n) => <li><a href={n.href} data-menu-link>{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <CallButton class="mobile-menu__call" />
+      <ul class="mobile-menu__clinics">
+        {CLINICS.map((c) => <li><a class="link-line" href={c.map} target="_blank" rel="noopener">{c.full}</a></li>)}
+        <li class="muted cap">{HOURS.slice(0, 2).map((h) => `${h.days} ${h.time}`).join(", ")}, неділя вихідний</li>
+      </ul>
+      <div class="mobile-menu__foot">
+        <a class="social" href={INSTAGRAM} target="_blank" rel="noopener"><Icon name="instagram" /><span>Instagram</span></a>
+        <a class="social" href={FACEBOOK} target="_blank" rel="noopener"><Icon name="facebook" /><span>Facebook</span></a>
+        <ul class="lang" aria-label="Мова сайту">
+          <li><span class="lang__current" aria-current="true">UA</span></li>
+          <li><FutureLink note={note} class="lang__item"><span lang="en">EN</span></FutureLink></li>
+          <li><FutureLink note={note} class="lang__item"><span lang="pl">PL</span></FutureLink></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    background: var(--color-bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease-out);
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--color-surface); }
+  .site-header__row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); height: var(--header-h); }
+  .logo { display: inline-flex; align-items: center; min-height: var(--tap); flex: none; }
+  .logo img { width: 112px; height: auto; }
+
+  .nav { display: none; }
+  .nav__list { display: flex; gap: var(--s-1); }
+  .nav__link {
+    position: relative; display: inline-flex; align-items: center; min-height: var(--tap); padding-inline: .75rem;
+    color: var(--color-text); font-weight: 500; text-decoration: none;
+  }
+  .nav__link::after {
+    content: ""; position: absolute; left: .75rem; right: .75rem; bottom: .45rem; height: 2px;
+    background: var(--color-focus); transform: scaleX(0); transform-origin: left; transition: transform 200ms var(--ease-out);
+  }
+  .nav__link:hover::after, .nav__link[aria-current="true"]::after { transform: scaleX(1); }
+
+  .site-header__end { display: flex; align-items: center; gap: var(--s-1); }
+  .lang { display: none; align-items: center; gap: .25rem; font-size: var(--fs-cap); }
+  .lang__current { display: inline-flex; align-items: center; min-height: var(--tap); padding-inline: .5rem; font-weight: 600; }
+  .lang :global(.lang__item) { padding-inline: .5rem; }
+  :global(.site-header__call) { display: none; }
+  .icon-call {
+    display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); border-radius: 50%;
+    background: var(--color-accent); color: var(--color-on-accent);
+    transition: transform 200ms var(--ease-out);
+  }
+  .icon-call:active { transform: scale(.96); }
+  .icon-call :global(svg) { width: 20px; height: 20px; }
+  .burger {
+    display: none; place-items: center; width: var(--tap); height: var(--tap); padding: 0;
+    border: 0; border-radius: var(--radius); background: transparent; cursor: pointer;
+  }
+  .burger:hover { background: var(--color-surface); }
+  :global(.js) .burger { display: inline-grid; }
+
+  @media (min-width: 1024px) {
+    .logo img { width: 140px; }
+    .nav { display: block; }
+    .nav__link { padding-inline: .5rem; }
+    .nav__link::after { left: .5rem; right: .5rem; }
+    :global(.site-header__call) { display: inline-flex; }
+    .icon-call, :global(.js) .burger { display: none; }
+  }
+
+  /* Mobile menu: full-screen white panel */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 60; overflow-y: auto;
+    background: var(--color-bg);
+    padding-bottom: calc(var(--s-4) + env(safe-area-inset-bottom));
+    animation: menu-in 240ms var(--ease-out);
+  }
+  .mobile-menu[hidden] { display: none; }
+  @keyframes menu-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  .mobile-menu__top { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+  .mobile-menu__title { font-weight: 600; color: var(--color-text-muted); font-size: var(--fs-cap); }
+  .mobile-menu__body { display: grid; gap: var(--s-4); padding-top: var(--s-2); }
+  .mobile-menu__nav a {
+    display: flex; align-items: center; min-height: 56px;
+    font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h2s);
+    color: var(--color-text); text-decoration: none; border-bottom: 1px solid var(--color-surface);
+  }
+  .mobile-menu :global(.mobile-menu__call) { width: 100%; justify-content: flex-start; }
+  .mobile-menu__clinics { display: grid; gap: .25rem; }
+  .mobile-menu__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+  .mobile-menu__foot .lang { display: flex; margin-left: auto; }
+  .social { display: inline-flex; align-items: center; gap: .5rem; min-height: var(--tap); color: var(--color-link); font-weight: 500; }
+  .social :global(svg) { width: 22px; height: 22px; }
+  @media (min-width: 1024px) { .mobile-menu { display: none !important; } }
+  @media (min-width: 1280px) {
+    .lang { display: flex; }
+    .nav__link { padding-inline: .75rem; }
+    .nav__link::after { left: .75rem; right: .75rem; }
+  }
+</style>

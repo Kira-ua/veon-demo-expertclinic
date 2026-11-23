@@ -1,0 +1,123 @@
+---
+import { getImage } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import c1b from "../assets/img/case1-before.jpg";
+import c1a from "../assets/img/case1-after.jpg";
+import c2b from "../assets/img/case2-before.jpg";
+import c2a from "../assets/img/case2-after.jpg";
+import c3b from "../assets/img/case3-before.jpg";
+import c3a from "../assets/img/case3-after.jpg";
+
+// Pairs checked by eye: "before" and "after" frames match the same patient.
+const CASES = [
+  { tab: "13 керамічних коронок", caption: "Верхня щелепа: ендодонтичне лікування, 13 керамічних коронок.", before: c1b, after: c1a },
+  { tab: "10 керамічних вінірів", caption: "10 керамічних вінірів на верхній щелепі.", before: c2b, after: c2a },
+  { tab: "2 імпланти і 27 коронок", caption: "Ортопедія та хірургія: 2 імпланти, 23 керамічні та 4 метало-керамічні коронки.", before: c3b, after: c3a },
+];
+const widths = [640, 960, 1280, 1600];
+const sizes = "(min-width: 1024px) 840px, 100vw";
+async function sources(src: ImageMetadata) {
+  const [avif, webp, jpg] = await Promise.all([
+    Promise.all(widths.map((w) => getImage({ src, width: w, format: "avif" }))),
+    Promise.all(widths.map((w) => getImage({ src, width: w, format: "webp" }))),
+    getImage({ src, width: 1280, format: "jpg" }),
+  ]);
+  const set = (a: { src: string }[]) => a.map((i, n) => `${i.src} ${widths[n]}w`).join(", ");
+  return { avif: set(avif), webp: set(webp), jpg: jpg.src };
+}
+const data = await Promise.all(CASES.map(async (c) => ({ ...c, b: await sources(c.before), a: await sources(c.after) })));
+const note = "Розділ у розробці";
+---
+<section id="cases" class="section cases" aria-labelledby="cases-title" data-rec="R-112">
+  <div class="container cases__grid" data-cases style="--pos: 50%">
+    <header class="cases__head">
+      <h2 id="cases-title">Три з 18 клінічних випадків: до і після</h2>
+      <p class="muted">Потягніть повзунок або скористайтеся стрілками клавіатури, щоб порівняти.</p>
+      <ul class="cases__tabs" aria-label="Клінічні випадки">
+        {data.map((c, i) => (
+          <li><button type="button" class="cases__tab" data-case-tab aria-pressed={i === 0 ? "true" : "false"}><span class="num">0{i + 1}</span>{c.tab}</button></li>
+        ))}
+      </ul>
+      <FutureLink note={note}>Усі 18 випадків</FutureLink>
+    </header>
+
+    <div class="cases__stage">
+      {data.map((c, i) => (
+        <figure class="case" data-case data-label={c.tab} data-active={i === 0 ? "" : undefined}>
+          <div class="case__frame">
+            <picture class="case__img case__img--before">
+              <source type="image/avif" srcset={c.b.avif} sizes={sizes} />
+              <source type="image/webp" srcset={c.b.webp} sizes={sizes} />
+              <img src={c.b.jpg} width="1600" height="800" alt={`До лікування: ${c.caption}`} loading="lazy" decoding="async" />
+            </picture>
+            <picture class="case__img case__img--after">
+              <source type="image/avif" srcset={c.a.avif} sizes={sizes} />
+              <source type="image/webp" srcset={c.a.webp} sizes={sizes} />
+              <img src={c.a.jpg} width="1600" height="800" alt={`Після лікування: ${c.caption}`} loading="lazy" decoding="async" />
+            </picture>
+            <span class="case__label case__label--before" aria-hidden="true">До</span>
+            <span class="case__label case__label--after" aria-hidden="true">Після</span>
+            <span class="case__handle" aria-hidden="true"></span>
+          </div>
+          <figcaption class="case__caption">{c.caption}</figcaption>
+        </figure>
+      ))}
+      <input class="cases__range" type="range" min="0" max="100" value="50" step="1" data-cases-range aria-label="Порівняння до і після" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cases__grid { display: grid; gap: var(--s-4); }
+  .cases__head { display: grid; gap: var(--s-2); align-content: start; justify-items: start; }
+  .cases__tabs { display: none; width: 100%; margin-top: var(--s-1); }
+  :global(.js) .cases__tabs { display: grid; }
+  .cases__tab {
+    display: flex; align-items: center; gap: var(--s-2); width: 100%; min-height: 56px; padding: .5rem 0;
+    border: 0; border-top: 1px solid var(--color-border); background: none; text-align: left; cursor: pointer;
+    font-weight: 500; color: var(--color-text-muted); transition: color 200ms var(--ease-out);
+  }
+  .cases__tab .num { font-size: var(--fs-cap); color: var(--color-text-muted); }
+  .cases__tab:hover { color: var(--color-text); }
+  .cases__tab[aria-pressed="true"] { color: var(--color-text); font-weight: 600; box-shadow: inset 3px 0 0 var(--color-focus); padding-left: var(--s-2); }
+
+  .cases__stage { position: relative; display: grid; gap: var(--s-4); }
+  .case { margin: 0; display: grid; gap: var(--s-2); }
+  :global(.js) .cases__stage { gap: 0; }
+  :global(.js) .case { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity 300ms var(--ease-out), visibility 0s linear 300ms; }
+  :global(.js) .case[data-active] { opacity: 1; visibility: visible; transition: opacity 300ms var(--ease-out); }
+
+  .case__frame { position: relative; overflow: hidden; border-radius: var(--radius-img); aspect-ratio: 2 / 1; background: var(--color-text); }
+  .case__img, .case__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .case__img--after { clip-path: inset(0 0 0 var(--pos)); }
+  .case__handle {
+    position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; background: var(--color-focus); pointer-events: none;
+  }
+  .case__handle::after {
+    content: ""; position: absolute; top: 50%; left: 50%; width: var(--tap); height: var(--tap); transform: translate(-50%, -50%);
+    border-radius: 50%; background: var(--color-focus); box-shadow: inset 0 0 0 3px var(--color-on-dark);
+  }
+  .case__label {
+    position: absolute; top: var(--s-2); padding: .2rem .6rem; border-radius: var(--radius);
+    background: var(--color-bg); color: var(--color-text); font-size: var(--fs-cap); font-weight: 600;
+  }
+  .case__label--before { left: var(--s-2); }
+  .case__label--after { right: var(--s-2); }
+  .case__caption { color: var(--color-text-muted); }
+
+  .cases__range {
+    display: none; position: absolute; left: 0; right: 0; top: 0; width: 100%; aspect-ratio: 2 / 1; height: auto;
+    margin: 0; opacity: 0; cursor: ew-resize; touch-action: pan-y;
+  }
+  :global(.js) .cases__range { display: block; }
+  .cases__stage:has(.cases__range:focus-visible) .case[data-active] .case__frame { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+  @media (min-width: 1024px) {
+    .cases__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .cases__head { grid-column: 1 / span 4; }
+    .cases__stage { grid-column: 5 / span 8; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .case, :global(.js) .case[data-active] { transition: none; }
+  }
+</style>

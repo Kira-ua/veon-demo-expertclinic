@@ -1,0 +1,38 @@
+---
+// Phones only: a call bar that appears after the hero; the page keeps bottom room so nothing is covered.
+import Icon from "./Icon.astro";
+import { PHONE_TEL, PHONE_LABEL } from "../data/clinic";
+---
+<div class="sticky-call" data-sticky-call data-rec="R-103">
+  <a class="sticky-call__btn" href={PHONE_TEL}>
+    <Icon name="phone" />
+    <span>Зателефонувати</span>
+    <span class="sticky-call__num">{PHONE_LABEL}</span>
+  </a>
+</div>
+
+<style>
+  .sticky-call {
+    position: fixed; inset: auto 0 0 0; z-index: 40;
+    padding: .5rem var(--space) calc(.5rem + env(safe-area-inset-bottom));
+    background: var(--color-bg);
+    box-shadow: 0 -1px 0 var(--color-border);
+    transition: transform 300ms var(--ease-out);
+  }
+  :global(.js) .sticky-call:not(.is-shown) { transform: translateY(110%); }
+  :global(.menu-open) .sticky-call { visibility: hidden; }
+  .sticky-call__btn {
+    display: flex; align-items: center; gap: .75rem; height: 48px; padding-inline: 1rem;
+    border-radius: var(--radius); background: var(--color-accent); color: var(--color-accent-ink);
+    font-weight: 600; text-decoration: none; white-space: nowrap;
+    transition: transform 200ms var(--ease-out);
+  }
+  .sticky-call__btn:active { transform: scale(.98); }
+  .sticky-call__btn :global(svg) { width: 20px; height: 20px; flex: none; }
+  .sticky-call__num { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 500; }
+  @media (max-width: 359px) { .sticky-call__num { display: none; } }
+  @media (min-width: 1024px) { .sticky-call { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .sticky-call { transition: none; } }
+  :global(body) { padding-bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom)); }
+  @media (min-width: 1024px) { :global(body) { padding-bottom: 0; } }
+</style>

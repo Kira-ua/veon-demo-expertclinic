@@ -1,0 +1,14 @@
+---
+// The one primary action of the site: a real phone call. Same look everywhere so it is recognised.
+import Icon from "./Icon.astro";
+import { PHONE_TEL, PHONE_LABEL } from "../data/clinic";
+interface Props { label?: string; variant?: "call" | "dark"; class?: string; showNumber?: boolean; rec?: string; }
+const { label = "Зателефонувати", variant = "call", class: cls, showNumber = true, rec } = Astro.props;
+---
+<a class:list={["btn", `btn--${variant}`, cls]} href={PHONE_TEL} data-rec={rec}>
+  <Icon name="phone" />
+  <span class="btn__text">
+    <span>{label}</span>
+    {showNumber && <span class="btn__sub">{PHONE_LABEL}</span>}
+  </span>
+</a>

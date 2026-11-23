@@ -1,0 +1,65 @@
+/* Hallmark · shape: single page, anchors, reception desk hero · genre: modern-minimal · theme: custom · job: book · idea: "Салатовий — колір людей ЕКСПЕРТ: на сторінці він позначає тільки людей і дзвінок" · vibe: "світла клініка, сині факти, салатові люди"
+ * paper: #FFFFFF · surface: absolute · accent: #73CF2D · display: Geologica · body: Golos Text · hero: H1 + стійка реєстратури (дзвінок, 2 адреси, графік) + широке вікно-фото ресепшна · nav: fixed header, 5 anchors + call button · footer: light #EEF4F8, 4 columns · imagery: client photos · signature: салатовий веде до людей
+ * axes: light/geometric-sans/chromatic-green · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: E, motion limited to five purposeful effects from concept.md (window opening, expand, before/after, call button, portraits) */
+/* Hallmark · waive 7b · --color-bg #FFFFFF · approved concept.md: white = the real white interior of the clinic (stand, furniture, marble on IMG_3735), not paper */
+/* Hallmark · waive 39b · .btn--lg in #hero, 60px · design review cycle 1 (review-finish.md): the only primary call action must read stronger, label and number in two lines */
+/* Hallmark · waive 44c · #hero ends below the 1440x900 fold · approved concept.md: the reception photo enters the first screen at ~40% and continues on scroll; H1, sentence, call and both addresses stay above the fold */
+/* Hallmark · answer 42 · footer: light #EEF4F8, 4 columns, decided in concept.md (Footer) */
+/* Hallmark · answer F4 · .btn--dark is used only on the salad #kids band where the salad call button would vanish (concept.md, Key components) */
+/* Client design tokens: filled ONLY from design/concept.md (veon-concept: colors, fonts). */
+:root {
+  /* colour roles */
+  --color-bg: #FFFFFF;
+  --color-surface: #EEF4F8;
+  --color-text: #0F2B45;
+  --color-text-muted: #4A5D70;
+  --color-link: #1D618C;
+  --color-focus: #148CD1;
+  --color-accent: #73CF2D;
+  --color-on-accent: #0F2B45;
+  --color-accent-ink: #0F2B45;
+  --color-border: #D5E2EC;
+  --color-on-dark: #FFFFFF;
+  --color-shade: rgb(15 43 69 / 0.08);
+
+  /* type */
+  --font-display: "Geologica", "Golos Text", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, sans-serif;
+  --fs-cap: clamp(0.8125rem, 0.789rem + 0.095vw, 0.875rem);
+  --fs-body: clamp(1.0625rem, 1.039rem + 0.095vw, 1.125rem);
+  --fs-h3: clamp(1.25rem, 1.204rem + 0.19vw, 1.375rem);
+  --fs-h2s: clamp(1.625rem, 1.532rem + 0.381vw, 1.875rem);
+  --fs-h2: clamp(2.125rem, 1.8rem + 1.333vw, 3rem);
+  --fs-h1: clamp(2.5rem, 1.571rem + 3.81vw, 5rem);
+  --lh-text: 1.55;
+  --lh-head: 1.1;
+  --lh-h1: 1.02;
+
+  /* space: 4/8 rhythm from concept.md */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2.5rem;
+  --s-5: 4rem;
+  --s-6: 6.5rem;
+  --s-7: 10rem;
+  --space: clamp(1.25rem, 0.229rem + 4.19vw, 4rem);
+  --container: 1280px;
+  --gap: 1.5rem;
+
+  /* shape */
+  --radius: 8px;
+  --radius-img: 14px;
+  --tap: 44px;
+  --btn-h: 56px;
+  --header-h: 64px;
+  --sticky-h: 64px;
+
+  /* motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 500ms;
+}
+@media (min-width: 1024px) {
+  :root { --header-h: 76px; --btn-h: 52px; }
+}

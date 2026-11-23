@@ -1,0 +1,85 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/img/logo.png";
+import FutureLink from "./FutureLink.astro";
+import { CLINICS, PHONE_TEL, PHONE_FULL, EMAIL, INSTAGRAM, FACEBOOK } from "../data/clinic";
+const note = "Розділ у розробці";
+const anchors = [
+  { href: "#directions", label: "Послуги" },
+  { href: "#kids", label: "Дітям" },
+  { href: "#doctors", label: "Лікарі" },
+  { href: "#cases", label: "Результати" },
+  { href: "#prices", label: "Ціни" },
+  { href: "#contacts", label: "Контакти" },
+];
+const info = [{ href: "#prices", label: "Страхування" }, { href: "#cases", label: "Кейси" }];
+const future = ["Цікаво", "Публічна оферта", "Політика конфіденційності"];
+---
+<footer class="footer" data-rec="R-112,R-102">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="#top" class="footer__logo">
+        <Image src={logo} alt="Стоматологічна клініка ЕКСПЕРТ" widths={[140, 280]} sizes="140px" width={140} height={48} format="webp" loading="lazy" />
+      </a>
+      <p class="cap muted">Ліцензія МОЗ на медичну практику, наказ №235 від 24.03.2016</p>
+    </div>
+
+    <nav class="footer__col" aria-label="Розділи головної">
+      <h2 class="footer__title">Головна</h2>
+      <ul>{anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}</ul>
+    </nav>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Інформація</h2>
+      <ul>
+        {info.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+        {future.map((f) => <li><FutureLink note={note}>{f}</FutureLink></li>)}
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Контакти</h2>
+      <ul>
+        {CLINICS.map((c) => <li><a href={c.map} target="_blank" rel="noopener">{c.full}</a></li>)}
+        <li><a href={PHONE_TEL}>{PHONE_FULL}</a></li>
+        <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+        <li class="footer__social"><a href={INSTAGRAM} target="_blank" rel="noopener">Instagram</a><a href={FACEBOOK} target="_blank" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <p class="cap muted">© 2026 Стоматологічна клініка ЕКСПЕРТ</p>
+    <ul class="footer__lang cap" aria-label="Мова сайту">
+      <li><span aria-current="true">UA</span></li>
+      <li><FutureLink note={note}><span lang="en">EN</span></FutureLink></li>
+      <li><FutureLink note={note}><span lang="pl">PL</span></FutureLink></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--color-surface); padding-top: var(--s-5); }
+  .footer__grid { display: grid; gap: var(--s-4); }
+  .footer__brand { display: grid; gap: var(--s-2); align-content: start; max-width: 22rem; }
+  .footer__logo { display: inline-flex; min-height: var(--tap); align-items: center; }
+  .footer__logo :global(img) { width: 140px; height: auto; }
+  .footer__title { font-family: var(--font-body); font-size: var(--fs-cap); font-weight: 600; color: var(--color-text-muted); letter-spacing: 0; margin-bottom: var(--s-1); }
+  .footer__col ul { display: grid; }
+  .footer__col a { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--color-text); text-decoration: none; overflow-wrap: anywhere; }
+  .footer__col a:hover { color: var(--color-link); text-decoration: underline; }
+  .footer__social { display: flex; gap: var(--s-3); }
+  .footer__lang { display: flex; align-items: center; gap: var(--s-2); }
+  .footer__lang span[aria-current] { font-weight: 600; }
+  .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--s-2); padding-block: var(--s-3) var(--s-4); margin-top: var(--s-4); border-top: 1px solid var(--color-border); }
+
+  @media (min-width: 768px) {
+    .footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .footer__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .footer__brand { grid-column: 1 / span 3; }
+    .footer__grid > :nth-child(2) { grid-column: 4 / span 2; }
+    .footer__grid > :nth-child(3) { grid-column: 6 / span 3; }
+    .footer__grid > :nth-child(4) { grid-column: 9 / span 4; }
+  }
+</style>

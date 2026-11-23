@@ -1,0 +1,23 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import CallButton from "../components/CallButton.astro";
+const home = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+---
+<Base lang="uk" title="Сторінку не знайдено — клініка ЕКСПЕРТ" description="Такої сторінки немає. Поверніться на головну або зателефонуйте: 068 491 19 11.">
+  <Header slot="header" home={home} />
+  <section class="nf container" aria-labelledby="nf-title">
+    <h1 id="nf-title">Такої сторінки немає</h1>
+    <p class="muted">Можливо, адресу введено з помилкою. Усе головне — на першій сторінці.</p>
+    <div class="nf__actions">
+      <a class="link-line" href={home}>На головну</a>
+      <CallButton />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { display: grid; gap: var(--s-3); justify-items: start; padding-block: calc(var(--header-h) + var(--s-6)) var(--s-6); }
+  .nf h1 { font-size: var(--fs-h2); text-wrap: balance; }
+  .nf__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+</style>

@@ -1,0 +1,57 @@
+---
+import FutureLink from "./FutureLink.astro";
+import CallButton from "./CallButton.astro";
+import { FIRST_VISIT, INSURERS } from "../data/clinic";
+const note = "Розділ у розробці";
+---
+<section id="prices" class="section prices" aria-labelledby="prices-title" data-rec="R-104">
+  <div class="container prices__grid">
+    <div class="prices__visit">
+      <h2 id="prices-title">Перший візит: консультація від 500</h2>
+      <dl class="prices__list">
+        {FIRST_VISIT.map((r) => (
+          <div class="prices__row">
+            <dt>{r.label}</dt>
+            <dd class="num">{r.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <FutureLink note={note}>Повний прайс</FutureLink>
+    </div>
+
+    <aside class="prices__ins" aria-labelledby="ins-title">
+      <h3 id="ins-title" class="prices__ins-title">Лікування за страховкою</h3>
+      <ul class="prices__insurers">
+        {INSURERS.map((n) => <li>{n}</li>)}
+      </ul>
+      <p class="muted">З іншими страховими — за спеціальною схемою. Уточніть в адміністратора:</p>
+      <CallButton label="Уточнити страховку" />
+    </aside>
+  </div>
+</section>
+
+<style>
+  .prices__grid { display: grid; gap: var(--s-5); }
+  .prices__visit { display: grid; gap: var(--s-3); align-content: start; justify-items: start; }
+  .prices__list { width: 100%; border-top: 1px solid var(--color-border); }
+  .prices__row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3);
+    padding-block: var(--s-2); border-bottom: 1px solid var(--color-border);
+  }
+  .prices__row dt { min-width: 0; max-width: 36ch; }
+  .prices__row dd { flex: none; font-size: var(--fs-h2s); line-height: 1; }
+
+  .prices__ins {
+    display: grid; gap: var(--s-2); align-content: start; justify-items: start;
+    padding: var(--s-4) var(--s-3); border-radius: var(--radius-img); background: var(--color-surface);
+  }
+  .prices__ins-title { font-family: var(--font-display); font-size: var(--fs-h2s); font-weight: 600; line-height: var(--lh-head); }
+  .prices__insurers { display: grid; gap: .25rem; margin-block: var(--s-1); }
+  .prices__insurers li { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-h3); line-height: 1.35; }
+
+  @media (min-width: 1024px) {
+    .prices__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .prices__visit { grid-column: 1 / span 7; }
+    .prices__ins { grid-column: 9 / span 4; padding: var(--s-5) var(--s-4); }
+  }
+</style>
